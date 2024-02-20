@@ -1,10 +1,10 @@
 [project]
 name = "ksa_compliance"
 authors = [
-    { name = "maged", email = "maged@lavaloon.com"}
+    { name = "Lavaloon", email = "info@lavaloon.com"}
 ]
 description = "KSA Compliance app for E-invoice"
-requires-python = ">=3.10"
+requires-python = ">=3.7"
 readme = "README.md"
 dynamic = ["version"]
 dependencies = [
