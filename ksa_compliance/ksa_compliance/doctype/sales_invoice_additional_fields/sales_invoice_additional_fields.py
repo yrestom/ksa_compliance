@@ -64,7 +64,14 @@ class SalesInvoiceAdditionalFields(Document):
         - B (position 7) = Self billed invoice. Self-billing is not allowed (KSA-2, position 7 cannot be ""1"") for export invoices (KSA-2, position 5 = 1).
         """
         # Basic Simplified or Tax invoice
-        self.invoice_type_transaction = "0100000" if self.buyer_vat_registration_number is None or "" else "0200000"
+        business_settings_doc = get_business_settings_doc(self.get("sales_invoice"))
+        if business_settings_doc.get("type_of_business_transactions") == 'Standard Tax Invoices':
+            self.invoice_type_transaction = "0100000"
+
+        elif business_settings_doc.get("type_of_business_transactions") == "Simplified Tax Invoices":
+            self.invoice_type_transaction = "0200000"
+        else:
+            self.invoice_type_transaction = "0100000" if self.buyer_vat_registration_number is None or "" else "0200000"
 
         is_debit, is_credit = frappe.db.get_value("Sales Invoice", self.get("sales_invoice"),
                                                   ["is_debit_note", "is_return"])
@@ -73,7 +80,7 @@ class SalesInvoiceAdditionalFields(Document):
         elif is_credit:
             self.invoice_type_code = "381"
         else:
-            self.invoice_type_code = "383"
+            self.invoice_type_code = "388"
 
     def set_tax_currency(self):
         self.tax_currency = "SAR"
